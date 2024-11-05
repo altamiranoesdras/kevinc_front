@@ -53,6 +53,9 @@
               </tr>
               </thead>
               <tbody>
+              <tr v-show="tiposServicios.length==0">
+                <td colspan="3" class="text-center">No hay tipos de servicio registrados</td>
+              </tr>
               <tr v-for="tipo in tiposServicios" :key="tipo.idTipoServicio">
                 <td>{{ tipo.idTipoServicio }}</td>
                 <td>{{ tipo.nombreTipoServicio }}</td>
