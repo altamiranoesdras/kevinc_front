@@ -49,29 +49,28 @@
               <tr>
                 <th>ID</th>
                 <th>Nombre del Tipo de Servicio</th>
-                <th style="">Acciones</th>
+                <th>Acciones</th>
               </tr>
               </thead>
               <tbody>
               <tr v-for="tipo in tiposServicios" :key="tipo.idTipoServicio">
                 <td>{{ tipo.idTipoServicio }}</td>
                 <td>{{ tipo.nombreTipoServicio }}</td>
-                <td class="text-center">
+                <td>
                   <!-- Botón Editar con ícono -->
                   <button
                       class="btn btn-warning btn-sm"
                       @click="editTipoServicio(tipo)"
                       style="margin-right: 1rem !important;"
                   >
-                    <i class="fas fa-edit"></i> <!-- Ícono de edición -->
+                    <i class="fas fa-edit"></i>
                   </button>
-
                   <!-- Botón Eliminar con ícono -->
                   <button
                       class="btn btn-danger btn-sm"
-                      @click="deleteTipoServicio(tipo.idTipoServicio)"
+                      @click="confirmDelete(tipo.idTipoServicio)"
                   >
-                    <i class="fas fa-trash"></i> <!-- Ícono de eliminación -->
+                    <i class="fas fa-trash"></i>
                   </button>
                 </td>
               </tr>
@@ -86,6 +85,7 @@
 
 <script>
 import api from '@/services/api';
+import Swal from 'sweetalert2';
 
 export default {
   name: 'TiposServicio',
@@ -109,43 +109,66 @@ export default {
       }
     },
     async handleSubmit() {
-      if (this.editMode) {
-        // Actualizar
-        try {
+      try {
+        // Mostrar mensaje de espera
+        Swal.fire({
+          title: this.editMode ? 'Actualizando...' : 'Guardando...',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+
+        if (this.editMode) {
+          // Actualizar
           await api.put(`/tipos-servicios/${this.form.idTipoServicio}`, {
             Nombre: this.form.Nombre,
           });
-          this.fetchTiposServicios();
-          this.resetForm();
-        } catch (error) {
-          console.error('Error al actualizar el tipo de servicio:', error);
-        }
-      } else {
-        // Guardar
-        try {
+          Swal.fire('Actualizado', 'El tipo de servicio fue actualizado exitosamente', 'success');
+        } else {
+          // Guardar
           await api.post('/tipos-servicios', {
             Nombre: this.form.Nombre,
           });
-          this.fetchTiposServicios();
-          this.resetForm();
-        } catch (error) {
-          console.error('Error al guardar el tipo de servicio:', error);
+          Swal.fire('Guardado', 'El tipo de servicio fue guardado exitosamente', 'success');
         }
+
+        this.fetchTiposServicios();
+        this.resetForm();
+      } catch (error) {
+        Swal.fire('Error', 'Hubo un problema al realizar la operación', 'error');
+        console.error('Error en la operación:', error);
       }
     },
     editTipoServicio(tipo) {
       this.form.idTipoServicio = tipo.idTipoServicio;
-      this.form.Nombre = tipo.Nombre;
+      this.form.Nombre = tipo.nombreTipoServicio;
       this.editMode = true;
     },
-    async deleteTipoServicio(idTipoServicio) {
-      if (confirm('¿Estás seguro de eliminar este tipo de servicio?')) {
-        try {
-          await api.delete(`/tipos-servicios/${idTipoServicio}`);
-          this.fetchTiposServicios();
-        } catch (error) {
-          console.error('Error al eliminar el tipo de servicio:', error);
+    confirmDelete(idTipoServicio) {
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'No podrás revertir esta acción',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deleteTipoServicio(idTipoServicio);
         }
+      });
+    },
+    async deleteTipoServicio(idTipoServicio) {
+      try {
+        await api.delete(`/tipos-servicios/${idTipoServicio}`);
+        Swal.fire('Eliminado', 'El tipo de servicio ha sido eliminado', 'success');
+        this.fetchTiposServicios();
+      } catch (error) {
+        Swal.fire('Error', 'Hubo un problema al eliminar el tipo de servicio', 'error');
+        console.error('Error al eliminar el tipo de servicio:', error);
       }
     },
     resetForm() {
