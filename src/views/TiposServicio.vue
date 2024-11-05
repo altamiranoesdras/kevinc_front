@@ -17,11 +17,11 @@
                     type="text"
                     id="nombreTipoServicio"
                     v-model="form.Nombre"
-                class="form-control"
-                required
+                    class="form-control"
+                    required
                 />
               </div>
-              <button type="submit" class="btn btn-primary">
+              <button type="submit" class="btn btn-primary" style="margin-right: 1rem !important;">
                 {{ editMode ? 'Actualizar' : 'Guardar' }}
               </button>
               <button
@@ -44,30 +44,34 @@
             <h5>Listado de Tipos de Servicio</h5>
           </div>
           <div class="card-body">
-            <table class="table table-striped">
+            <table class="table table-sm table-bordered table-striped">
               <thead>
               <tr>
                 <th>ID</th>
                 <th>Nombre del Tipo de Servicio</th>
-                <th>Acciones</th>
+                <th style="">Acciones</th>
               </tr>
               </thead>
               <tbody>
               <tr v-for="tipo in tiposServicios" :key="tipo.idTipoServicio">
                 <td>{{ tipo.idTipoServicio }}</td>
                 <td>{{ tipo.nombreTipoServicio }}</td>
-                <td>
+                <td class="text-center">
+                  <!-- Botón Editar con ícono -->
                   <button
                       class="btn btn-warning btn-sm"
                       @click="editTipoServicio(tipo)"
+                      style="margin-right: 1rem !important;"
                   >
-                    Editar
+                    <i class="fas fa-edit"></i> <!-- Ícono de edición -->
                   </button>
+
+                  <!-- Botón Eliminar con ícono -->
                   <button
                       class="btn btn-danger btn-sm"
                       @click="deleteTipoServicio(tipo.idTipoServicio)"
                   >
-                    Eliminar
+                    <i class="fas fa-trash"></i> <!-- Ícono de eliminación -->
                   </button>
                 </td>
               </tr>
