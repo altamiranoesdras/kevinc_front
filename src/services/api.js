@@ -2,7 +2,10 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://back-kevinc.onrender.com', // Reemplaza con la URL base de tu API
+    //url producción
+    // baseURL: 'https://back-kevinc.onrender.com',
+    //url local
+    baseURL: 'http://localhost:3001',
 });
 
 export default api;

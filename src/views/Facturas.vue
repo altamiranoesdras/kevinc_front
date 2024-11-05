@@ -30,8 +30,8 @@
               <tr v-for="factura in facturas" :key="factura.id">
                 <td>{{ factura.idFactura }}</td>
                 <td>{{ factura.cliente }}</td>
-                <td>{{ factura.total }}</td>
-                <td>{{ factura.fecha }}</td>
+                <td>{{ formatearMonto(factura.total) }}</td>
+                <td>{{ formatFecha(factura.fecha) }}</td>
                 <td>
                   <!-- Botón Editar con ícono -->
                   <button
@@ -62,6 +62,7 @@
 <script>
 import api from '@/services/api';
 import Swal from 'sweetalert2';
+import moment from 'moment';
 
 export default {
   name: 'Facturas',
@@ -73,25 +74,27 @@ export default {
   methods: {
     async fetchFacturas() {
       try {
-        const response = await api.get('https://back-kevinc.onrender.com/facturas');
+        const response = await api.get('/facturas');
         this.facturas = response.data;
       } catch (error) {
         console.error('Error al obtener las facturas:', error);
       }
     },
+    formatFecha(fecha) {
+      if (!fecha) return '';
+      return moment(fecha).format('DD/MM/YYYY HH:mm:ss');
+    },
+    formatearMonto(monto) {
+      if (!monto) return '';
+      return `Q${monto.toFixed(2)}`;
+    },
     crearFactura() {
-      Swal.fire({
-        title: 'Crear Nueva Factura',
-        text: 'Función para crear una nueva factura.',
-        icon: 'info',
-      });
+      // Redirige a la ruta de creación de facturas
+      this.$router.push({ name: 'CrearFactura' });
     },
     editFactura(factura) {
-      Swal.fire({
-        title: 'Editar Factura',
-        text: `Función para editar la factura con ID ${factura.id}.`,
-        icon: 'info',
-      });
+      // Redirige a la ruta de edición de facturas con el ID de la factura
+      this.$router.push({ name: 'EditarFactura', params: { id: factura.idFactura } });
     },
     confirmDelete(id) {
       Swal.fire({
@@ -111,7 +114,7 @@ export default {
     },
     async deleteFactura(id) {
       try {
-        await api.delete(`https://back-kevinc.onrender.com/facturas/${id}`);
+        await api.delete(`/facturas/${id}`);
         Swal.fire('Eliminado', 'La factura ha sido eliminada', 'success');
         this.fetchFacturas();
       } catch (error) {
