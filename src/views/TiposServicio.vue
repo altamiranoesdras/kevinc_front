@@ -16,9 +16,9 @@
                 <input
                     type="text"
                     id="nombreTipoServicio"
-                    v-model="form.nombreTipoServicio"
-                    class="form-control"
-                    required
+                    v-model="form.Nombre"
+                class="form-control"
+                required
                 />
               </div>
               <button type="submit" class="btn btn-primary">
@@ -90,7 +90,7 @@ export default {
       tiposServicios: [],
       form: {
         idTipoServicio: null,
-        nombreTipoServicio: '', // Cambiado a nombreTipoServicio
+        Nombre: '',
       },
       editMode: false,
     };
@@ -109,7 +109,7 @@ export default {
         // Actualizar
         try {
           await api.put(`/tipos-servicios/${this.form.idTipoServicio}`, {
-            nombreTipoServicio: this.form.nombreTipoServicio, // Usar nombreTipoServicio
+            Nombre: this.form.Nombre,
           });
           this.fetchTiposServicios();
           this.resetForm();
@@ -120,7 +120,7 @@ export default {
         // Guardar
         try {
           await api.post('/tipos-servicios', {
-            nombreTipoServicio: this.form.nombreTipoServicio, // Usar nombreTipoServicio
+            Nombre: this.form.Nombre,
           });
           this.fetchTiposServicios();
           this.resetForm();
@@ -131,7 +131,7 @@ export default {
     },
     editTipoServicio(tipo) {
       this.form.idTipoServicio = tipo.idTipoServicio;
-      this.form.nombreTipoServicio = tipo.nombreTipoServicio; // Usar nombreTipoServicio
+      this.form.Nombre = tipo.Nombre;
       this.editMode = true;
     },
     async deleteTipoServicio(idTipoServicio) {
@@ -146,7 +146,7 @@ export default {
     },
     resetForm() {
       this.form.idTipoServicio = null;
-      this.form.nombreTipoServicio = ''; // Reiniciar nombreTipoServicio
+      this.form.Nombre = '';
       this.editMode = false;
     },
   },
