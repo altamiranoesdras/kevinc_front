@@ -1,7 +1,10 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Mi Aplicación</a>
+      <a class="navbar-brand" href="#">
+        <img src="/favicon.ico" alt="" width="30" height="30" class="d-inline-block align-text-top">
+        Gestión de Facturas
+      </a>
       <button
           class="navbar-toggler"
           type="button"
